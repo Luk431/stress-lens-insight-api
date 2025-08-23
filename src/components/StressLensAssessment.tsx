@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { Activity, Brain, Heart, Moon, Smartphone, Target } from "lucide-react";
+import { Activity, Brain, Heart, Moon, Smartphone, Target, Circle } from "lucide-react";
 
 export interface StressInput {
   SleepHours?: number;
@@ -92,6 +92,12 @@ const StressLensAssessment = () => {
     }));
   };
 
+  const getStressLevelColor = (level: number) => {
+    if (level <= 3) return { color: 'text-traffic-green', bg: 'bg-traffic-green/20', name: 'Low', trafficColor: 'traffic-green' };
+    if (level <= 6) return { color: 'text-traffic-yellow', bg: 'bg-traffic-yellow/20', name: 'Medium', trafficColor: 'traffic-yellow' };
+    return { color: 'text-traffic-red', bg: 'bg-traffic-red/20', name: 'High', trafficColor: 'traffic-red' };
+  };
+
   if (insight) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-stress-calm to-background p-6">
@@ -114,11 +120,28 @@ const StressLensAssessment = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-3xl font-bold text-stress-brand">
-                      {insight.stressLevel}/10
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      Overall Score: {insight.score}%
+                    <div className="flex items-center gap-4">
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                        style={{ 
+                          backgroundColor: insight.stressLevel <= 3 ? 'hsl(122, 39%, 49%)' : 
+                                         insight.stressLevel <= 6 ? 'hsl(44, 100%, 70%)' : 
+                                         'hsl(343, 81%, 61%)'
+                        }}
+                      >
+                        <Circle className="h-8 w-8 text-white fill-current" />
+                      </div>
+                      <div>
+                        <div className={`text-3xl font-bold ${getStressLevelColor(insight.stressLevel).color}`}>
+                          {insight.stressLevel}/10
+                        </div>
+                        <div className={`text-sm font-medium ${getStressLevelColor(insight.stressLevel).color}`}>
+                          {getStressLevelColor(insight.stressLevel).name} Risk
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-1">
+                          Overall Score: {insight.score}%
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -173,10 +196,13 @@ const StressLensAssessment = () => {
     <div className="min-h-screen bg-gradient-to-br from-stress-calm to-background p-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <div className="mx-auto w-20 h-20 bg-gradient-to-r from-stress-primary to-stress-secondary rounded-full flex items-center justify-center mb-6">
-            <Brain className="h-10 w-10 text-stress-brand" />
+          <div className="mx-auto mb-6 flex justify-center">
+            <img 
+              src="/lovable-uploads/cd3db1c1-978a-4b6b-a3a5-995b3c1bfbd6.png" 
+              alt="StressLens - Measure early signs of stress and burnout" 
+              className="h-24 object-contain"
+            />
           </div>
-          <h1 className="text-4xl font-bold text-stress-brand mb-4">StressLens</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Measure early signs of stress and burnout through comprehensive data analysis
           </p>

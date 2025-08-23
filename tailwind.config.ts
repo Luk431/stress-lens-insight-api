@@ -69,6 +69,11 @@ export default {
 					calm: 'hsl(var(--stress-calm))',
 					success: 'hsl(var(--stress-success))',
 					warning: 'hsl(var(--stress-warning))'
+				},
+				traffic: {
+					green: 'hsl(var(--traffic-green))',
+					yellow: 'hsl(var(--traffic-yellow))',
+					red: 'hsl(var(--traffic-red))'
 				}
 			},
 			borderRadius: {

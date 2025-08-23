@@ -8,8 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 210 25% 20%;
+    --background: 207 68% 15%;
+    --foreground: 0 0% 98%;
 
     --card: 0 0% 100%;
     --card-foreground: 210 25% 20%;
@@ -43,6 +43,11 @@ All colors MUST be HSL.
     --stress-calm: 200 25% 96%;
     --stress-success: 140 45% 70%;
     --stress-warning: 45 90% 70%;
+    
+    /* Traffic light colors for stress levels */
+    --traffic-green: 122 39% 49%; /* #4CAF50 */
+    --traffic-yellow: 44 100% 70%; /* #FFD166 */
+    --traffic-red: 343 81% 61%; /* #EF476F */
 
     /* Gradients */
     --gradient-calm: linear-gradient(135deg, hsl(var(--stress-calm)), hsl(var(--accent)));
