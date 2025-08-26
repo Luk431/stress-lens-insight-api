@@ -26,7 +26,7 @@ export interface StressInput {
 
 interface StressInsight {
   stressLevel: number;
-  riskFactors: string[];
+  //riskFactors: string[];
   recommendations: string[];
   score: number;
 }
@@ -55,20 +55,30 @@ const StressLensAssessment = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/insight', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      //https://localhost:7126
+      //https://localhost:44335
+      // const response = await fetch('https://localhost:44335/insight', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
 
-      if (!response.ok) {
-        throw new Error('Failed to get stress insight');
-      }
+      // if (!response.ok) {
+      //   throw new Error('Failed to get stress insight');
+      // }
 
-      const result = await response.json();
-      setInsight(result);
+      // const result = await response.json();
+      // const raw = result.choices[0].message.content;
+      // const cleaned = raw.replace(/```json\n?/, "").replace(/```/, "").trim();
+      // const data = JSON.parse(cleaned);
+      const data: StressInsight = {
+        recommendations: ["Dedica 15 minutos a un ejercicio de respiración consciente."],
+        stressLevel: 2,
+        score: 1
+      };
+      setInsight(data);
       
       toast({
         title: "Assessment Complete",
@@ -93,8 +103,8 @@ const StressLensAssessment = () => {
   };
 
   const getStressLevelColor = (level: number) => {
-    if (level <= 3) return { color: 'text-traffic-green', bg: 'bg-traffic-green/20', name: 'Low', trafficColor: 'traffic-green' };
-    if (level <= 6) return { color: 'text-traffic-yellow', bg: 'bg-traffic-yellow/20', name: 'Medium', trafficColor: 'traffic-yellow' };
+    if (level <= 1) return { color: 'text-traffic-green', bg: 'bg-traffic-green/20', name: 'Low', trafficColor: 'traffic-green' };
+    if (level <= 2) return { color: 'text-traffic-yellow', bg: 'bg-traffic-yellow/20', name: 'Medium', trafficColor: 'traffic-yellow' };
     return { color: 'text-traffic-red', bg: 'bg-traffic-red/20', name: 'High', trafficColor: 'traffic-red' };
   };
 
@@ -124,8 +134,8 @@ const StressLensAssessment = () => {
                       <div 
                         className="w-12 h-12 rounded-full flex items-center justify-center"
                         style={{ 
-                          backgroundColor: insight.stressLevel <= 3 ? 'hsl(122, 39%, 49%)' : 
-                                         insight.stressLevel <= 6 ? 'hsl(44, 100%, 70%)' : 
+                          backgroundColor: insight.stressLevel <= 1 ? 'hsl(122, 39%, 49%)' : 
+                                         insight.stressLevel <= 2 ? 'hsl(44, 100%, 70%)' : 
                                          'hsl(343, 81%, 61%)'
                         }}
                       >
@@ -133,14 +143,14 @@ const StressLensAssessment = () => {
                       </div>
                       <div>
                         <div className={`text-3xl font-bold ${getStressLevelColor(insight.stressLevel).color}`}>
-                          {insight.stressLevel}/10
+                          {insight.stressLevel}/3
                         </div>
                         <div className={`text-sm font-medium ${getStressLevelColor(insight.stressLevel).color}`}>
                           {getStressLevelColor(insight.stressLevel).name} Risk
                         </div>
-                        <div className="text-sm text-muted-foreground mt-1">
+                        {/* <div className="text-sm text-muted-foreground mt-1">
                           Overall Score: {insight.score}%
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </CardContent>
@@ -148,27 +158,55 @@ const StressLensAssessment = () => {
 
                 <Card className="bg-stress-secondary/20">
                   <CardHeader>
-                    <CardTitle className="text-lg">Risk Factors</CardTitle>
+                    <CardTitle className="text-lg">Recommendations</CardTitle>
+                    {insight.stressLevel == 1 && (<CardTitle className="text-lg">🟢 Riesgo Bajo – Mantenimiento</CardTitle>)}
+                    {insight.stressLevel == 2 && (<CardTitle className="text-lg">🟡 Riesgo Medio – Prevención intensiva
+</CardTitle>)}
+                    {insight.stressLevel == 3 && (<CardTitle className="text-lg">🔴 Riesgo Alto – Intervención activa</CardTitle>)}
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-1">
-                      {insight.riskFactors.map((factor, index) => (
-                        <li key={index} className="text-sm">• {factor}</li>
-                      ))}
-                    </ul>
+                    {insight.stressLevel === 1 && (
+                      <ul className="list-disc list-inside space-y-2 text-sm">
+                        <li>Seguí con tus rutinas saludables.</li>
+                        <li>Pequeñas pausas de 5 min para moverte.</li>
+                        <li>Hidratate bien durante el día.</li>
+                      </ul>
+                    )}
+
+                    {insight.stressLevel === 2 && (
+                      <ul className="list-disc list-inside space-y-2 text-sm">
+                        <li>Dormí 30 min más que ayer.</li>
+                        <li>Reemplazá una comida con harinas/azúcar por fruta o proteína.</li>
+                        <li>Movete 15–20 min (caminar, estirarte, subir escaleras).</li>
+                        <li>Hacé 2 pausas breves de 2–3 min durante la jornada.</li>
+                        <li>Movete 20–30 min suave (caminata relajada).</li>
+                        <li>Si tu humor ≤ 3, mandá un mensaje breve a alguien de confianza.</li>
+                      </ul>
+                    )}
+
+                    {insight.stressLevel === 3 && (
+                      <ul className="list-disc list-inside space-y-2 text-sm">
+                        <li>Hacé una pausa guiada de 10 min (respiración + estiramientos).</li>
+                        <li>Tené un día sin ultraprocesados ni bebidas azucaradas.</li>
+                        <li>Prioridad: 7–8 h de sueño esta noche (pantallas off 60 min antes).</li>
+                        <li>Movete 20–30 min suave (caminata relajada).</li>
+                        <li>Buscá un contacto social significativo (llamada o encuentro breve).</li>
+                      </ul>
+                    )}
                   </CardContent>
                 </Card>
+
               </div>
 
               <Card className="bg-stress-success/20">
                 <CardHeader>
-                  <CardTitle className="text-lg">Recommendations</CardTitle>
+                  <CardTitle className="text-lg">Extra IA Recommendations</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {insight.recommendations.map((rec, index) => (
-                      <li key={index} className="text-sm">✓ {rec}</li>
-                    ))}
+                    <div className="text-2xl font-bold text-stress-brand">
+                      {insight.recommendations}
+                    </div>
                   </ul>
                 </CardContent>
               </Card>
@@ -181,9 +219,9 @@ const StressLensAssessment = () => {
                 >
                   Take New Assessment
                 </Button>
-                <Button variant="stress-secondary" size="lg">
+                {/* <Button variant="stress-secondary" size="lg">
                   Access Resources
-                </Button>
+                </Button> */}
               </div>
             </CardContent>
           </Card>
@@ -195,17 +233,18 @@ const StressLensAssessment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stress-calm to-background p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-6 flex justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-6 flex justify-center" style={{ marginBottom: -5}} id='headerImgDiv'>
             <img 
               src="/lovable-uploads/cd3db1c1-978a-4b6b-a3a5-995b3c1bfbd6.png" 
               alt="StressLens - Measure early signs of stress and burnout" 
-              className="h-24 object-contain"
+              className="object-contain rounded-tl-lg rounded-tr-lg"
+              id='headerImg'
             />
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          {/* <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Measure early signs of stress and burnout through comprehensive data analysis
-          </p>
+          </p> */}
         </div>
 
         <Card className="border-stress-primary/20 shadow-lg">
@@ -418,15 +457,7 @@ const StressLensAssessment = () => {
                   disabled={isLoading || !formData.genero}
                   className="min-w-[200px]"
                 >
-                  {isLoading ? "Analyzing..." : "Confirm Data"}
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="stress-secondary" 
-                  size="lg"
-                  className="min-w-[200px]"
-                >
-                  Access Resources
+                  {isLoading ? "Analyzing..." : "Check my stress level"}
                 </Button>
               </div>
             </form>

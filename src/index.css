@@ -37,7 +37,7 @@ All colors MUST be HSL.
     --ring: 210 25% 20%;
 
     /* StressLens brand colors */
-    --stress-primary: 200 60% 75%; /* #89CFF0 equivalent */
+    --stress-primary: 255 60% 75%; /* #89CFF0 equivalent */
     --stress-secondary: 140 60% 80%; /* #A8E6CF equivalent */
     --stress-brand: 210 25% 20%; /* #213555 */
     --stress-calm: 200 25% 96%;
